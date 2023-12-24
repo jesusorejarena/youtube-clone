@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, CardBody } from '@nextui-org/react';
+import { Card, CardBody } from '@nextui-org/react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
 import { getYouTubeVideoId } from '../../../helpers';
-import { getAllVideosAPI } from '../../../services/videos';
+import { toast } from 'sonner';
+import { getAllMyVideosAPI } from '../../../services/videos';
 
-const Home = () => {
+const MyVideos = () => {
 	const navigate = useNavigate();
 
 	const [videos, setVideos] = useState([]);
 
 	const getVideos = async () => {
 		try {
-			const response = await getAllVideosAPI();
+			const response = await getAllMyVideosAPI();
 
 			setVideos(response.data);
 		} catch (error) {
@@ -30,7 +30,7 @@ const Home = () => {
 				<CardBody className="space-y-10 lg:p-14">
 					<header className="flex flex-col justify-between items-start p-5 lg:p-0 lg:pb-5">
 						<div className="flex flex-row justify-between w-full items-center mb-5">
-							<h2 className="text-primary font-medium text-3xl">Ultimos videos</h2>
+							<h2 className="text-primary font-medium text-3xl">Mis videos</h2>
 						</div>
 					</header>
 
@@ -39,12 +39,7 @@ const Home = () => {
 							<Card key={index} className="h-[275px] w-[350px] border border-[#CACDD8] cursor-pointer">
 								<CardBody className="flex flex-row lg:flex-col gap-4" onClick={() => navigate(`/video/${video.id}`)}>
 									<div className="">
-										<div className="flex justify-between items-center mb-3">
-											<h2 className="font-bold text-lg">{video.title}</h2>
-											<Button color="primary" size="sm" onClick={() => navigate(`/video/${video.id}`)}>
-												Ver detalles
-											</Button>
-										</div>
+										<h2 className="font-bold text-lg mb-4">{video.title}</h2>
 										<iframe
 											width="320"
 											height="200"
@@ -69,4 +64,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default MyVideos;

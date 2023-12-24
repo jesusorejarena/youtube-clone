@@ -19,9 +19,17 @@ app.use(express.json());
 
 // Proprietary Routes
 import authRouter from './routes/auth.routes.js';
+import videoRouter from './routes/video.routes.js';
+import commentRouter from './routes/comment.routes.js';
+import historyRouter from './routes/history.routes.js';
+import likesRouter from './routes/like.routes.js';
 
 app.get('/api', (req, res) => res.send('Hello World!'));
 app.use('/api/auth', authRouter);
+app.use('/api/video', videoRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/history', historyRouter);
+app.use('/api/likes', likesRouter);
 
 // catch 404 and forward to error handler
 /* app.use((req, res, next) => {

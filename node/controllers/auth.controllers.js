@@ -55,6 +55,7 @@ export const signIn = async (req, res) => {
 
 	try {
 		let user = await Users.findOne({
+			attributes: ['id', 'name', 'email'],
 			where: { email: email },
 		});
 
@@ -87,5 +88,10 @@ export const signIn = async (req, res) => {
 /* ------------------------------- */
 
 export const verifyUser = async (req, res) => {
-	return res.status(200).json({ message: 'User verified successfully.' });
+	let user = await Users.findOne({
+		attributes: ['id', 'name', 'email'],
+		where: { id: req.client.id },
+	});
+
+	return res.status(200).json({ user, message: 'User verified successfully.' });
 };

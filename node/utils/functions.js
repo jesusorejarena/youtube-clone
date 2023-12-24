@@ -4,13 +4,9 @@ import jwt from 'jsonwebtoken';
 export const createJwt = (user) => {
 	return jwt.sign(
 		{
-			id_usr: user.id_usr,
-			correo: user.correo,
-			id_rol_usr: user.id_rol_usr,
-			nb_usr: user.nb_usr,
-			ap_usr: user.ap_usr,
-			cod_empresa_me: user.cod_empresa_me,
-			doc: user.doc,
+			id: user.id,
+			email: user.email,
+			name: user.name,
 		},
 		process.env.SECRET_KEY,
 		{

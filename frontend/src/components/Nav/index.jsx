@@ -1,14 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem } from '@nextui-org/react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { menuItems } from './data';
+import AuthContext from '../../context/AuthContext';
 
 const Nav = () => {
 	const location = useLocation();
+	const navigate = useNavigate();
+
+	const { user, logout } = useContext(AuthContext);
 
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const [navItems, setNavItems] = useState([]);
+
+	useEffect(() => {
+		let navItemsList = menuItems.filter((item) => {
+			if (user.email.length > 0) return item.path;
+			else return item.path !== '/add-video' && item.path !== '/my-videos' && item.path !== '/history';
+		});
+
+		setNavItems(navItemsList);
+	}, [user.email]);
 
 	return (
 		<Navbar className="bg-white" maxWidth="full" isBordered isMenuOpen={isMenuOpen}>
@@ -27,7 +42,7 @@ const Nav = () => {
 			<NavbarContent>
 				<NavbarContent justify="end" className="space-x-5">
 					<div className="hidden lg:flex space-x-12 items-center">
-						{menuItems.map((item, index) => (
+						{navItems.map((item, index) => (
 							<NavbarItem key={index}>
 								<Link
 									color="foreground"
@@ -40,20 +55,36 @@ const Nav = () => {
 								</Link>
 							</NavbarItem>
 						))}
-						<div className="space-x-4 flex">
+
+						{user.email.length === 0 ? (
+							<div className="space-x-4 flex">
+								<NavbarItem>
+									<Link color="primary" to={'/login'}>
+										<Button color="primary">Login</Button>
+									</Link>
+								</NavbarItem>
+								<NavbarItem>
+									<Link color="primary" to={'/signin'}>
+										<Button color="primary" variant="bordered">
+											Sign In
+										</Button>
+									</Link>
+								</NavbarItem>
+							</div>
+						) : (
 							<NavbarItem>
-								<Link color="primary" to={'/login'}>
-									<Button color="primary">Login</Button>
-								</Link>
+								<Button
+									color="primary"
+									variant="bordered"
+									onPress={() => {
+										logout();
+										navigate('/');
+									}}
+								>
+									Cerrar Sesión
+								</Button>
 							</NavbarItem>
-							<NavbarItem>
-								<Link color="primary" to={'/signin'}>
-									<Button color="primary" variant="bordered">
-										Sign In
-									</Button>
-								</Link>
-							</NavbarItem>
-						</div>
+						)}
 					</div>
 				</NavbarContent>
 			</NavbarContent>

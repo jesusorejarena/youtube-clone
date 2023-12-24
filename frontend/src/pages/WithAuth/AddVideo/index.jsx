@@ -1,22 +1,25 @@
-import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
+import { Button, Card, CardBody } from '@nextui-org/react';
 import { useFormik } from 'formik';
-import { loginInitialValues, loginSchema } from './initialForms';
+import { videoInitialValues, videoSchema } from './initialForms';
 import InputText from '../../../components/Commons/InputText';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { createVideoAPI } from '../../../services/videos';
+import { getYouTubeVideoId } from '../../../helpers';
 
 const Login = () => {
 	const navigate = useNavigate();
 
 	const formik = useFormik({
-		initialValues: loginInitialValues,
-		validationSchema: loginSchema,
+		initialValues: videoInitialValues,
+		validationSchema: videoSchema,
 		onSubmit: async (values) => {
 			try {
 				await createVideoAPI(values);
 
 				toast.success('Video guardado correctamente.');
+
+				navigate('/');
 			} catch (error) {
 				toast.error(error.response.data.message ?? 'Error al subir el video');
 			}
@@ -25,49 +28,68 @@ const Login = () => {
 
 	return (
 		<main className="flex flex-col gap-y-10 items-center justify-center">
-			<div className="w-full max-w-[460px] max-h-[600px]">
-				<Card className="p-6">
-					<CardHeader className="pb-4 pt-2 px-4 flex-col items-center">
-						<h3 className="font-bold text-2xl">Login</h3>
-					</CardHeader>
-					<CardBody className="overflow-visible py-2">
-						<form onSubmit={formik.handleSubmit} noValidate>
-							<div className="flex flex-col w-full mb-2 md:mb-0 gap-5">
-								<InputText
-									type="text"
-									name="name"
-									label="Title video"
-									isRequired
-									onChange={formik.handleChange}
-									value={formik.values.name}
-									error={formik.errors.name}
-									touched={formik.touched.name}
-								/>
+			<div className="w-full max-w-[1296px] max-h-[600px]">
+				<Card className="max-w-[1296px]">
+					<CardBody className="space-y-10 lg:p-14">
+						<header className="flex flex-col justify-between items-start p-5 lg:p-0 lg:pb-5">
+							<div className="flex flex-row justify-between w-full items-center mb-5">
+								<h2 className="text-primary font-medium text-3xl">Subir video</h2>
+							</div>
+						</header>
 
-								<InputText
-									type="text"
-									name="link"
-									label="Link Video"
-									isRequired
-									onChange={formik.handleChange}
-									value={formik.values.link}
-									error={formik.errors.link}
-									touched={formik.touched.link}
-								/>
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-10 py-2">
+							<div className="flex justify-center">
+								<form onSubmit={formik.handleSubmit} noValidate className="max-w-[400px] w-full">
+									<div className="flex flex-col w-full mb-2 md:mb-0 gap-5">
+										<InputText
+											type="text"
+											name="title"
+											label="Title video"
+											isRequired
+											onChange={formik.handleChange}
+											value={formik.values.title}
+											error={formik.errors.title}
+											touched={formik.touched.title}
+										/>
 
-								<div className="flex flex-col gap-3 mt-5">
-									<Button color="primary" type="submit">
-										Login
-									</Button>
+										<InputText
+											type="text"
+											name="video"
+											label="Link Video"
+											isRequired
+											onChange={formik.handleChange}
+											value={formik.values.video}
+											error={formik.errors.video}
+											touched={formik.touched.video}
+										/>
 
-									<p className="text-center">or</p>
+										<Button className="mt-5 w-full" color="primary" type="submit">
+											Guardar
+										</Button>
+									</div>
+								</form>
+							</div>
 
-									<Button color="primary" variant="bordered" onPress={() => navigate('/signin')}>
-										Sign in
-									</Button>
+							<div className="flex justify-center">
+								<div className="flex flex-col mb-2 md:mb-0 gap-5 bg-gray-500 w-[640px] h-[390px]">
+									{formik.values.video.length > 0 && (
+										<iframe
+											width="640"
+											height="390"
+											src={`https://www.youtube.com/embed/${getYouTubeVideoId(formik.values.video)}?start=103`}
+											title="	"
+											allow="accelerometer; 
+									autoplay; 
+									clipboard-write; 
+									encrypted-media; 
+									gyroscope; 
+									picture-in-picture; 
+									web-share"
+										></iframe>
+									)}
 								</div>
 							</div>
-						</form>
+						</div>
 					</CardBody>
 				</Card>
 			</div>

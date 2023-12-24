@@ -3,10 +3,12 @@ import { Videos } from '../models/videos.model.js';
 import { Comments } from '../models/comments.model.js';
 import { Likes } from '../models/likes.model.js';
 
-const createVideo = async (req, res) => {
+export const createVideo = async (req, res) => {
 	try {
-		response = await Videos.create({
+		const response = await Videos.create({
 			...req.body,
+			id_user: req.client.id,
+			created: new Date(),
 		});
 
 		res.status(200).json({ data: response, message: 'Video subido correctamente.' });
@@ -15,23 +17,23 @@ const createVideo = async (req, res) => {
 	}
 };
 
-const getVideoById = async (req, res) => {
-	const { id } = req.query;
+export const getVideoById = async (req, res) => {
+	const { id } = req.params;
 
 	try {
-		videos = await Videos.findOne({
+		const videos = await Videos.findOne({
 			where: { id: id },
 		});
 
-		videosComments = await Comments.findOne({
+		const videosComments = await Comments.findOne({
 			where: { id_video: id },
 		});
 
-		videosLike = await Likes.count({
+		const videosLike = await Likes.count({
 			where: { id_video: id, type: 'like' },
 		});
 
-		videosDislike = await Likes.count({
+		const videosDislike = await Likes.count({
 			where: { id_video: id, type: 'dislike' },
 		});
 
@@ -41,9 +43,9 @@ const getVideoById = async (req, res) => {
 	}
 };
 
-const getAllVideos = async (req, res) => {
+export const getAllVideos = async (req, res) => {
 	try {
-		videos = await Videos.findAll();
+		const videos = await Videos.findAll({ order: [['created', 'DESC']] });
 
 		res.status(200).json({ data: videos, message: 'Videos conseguidos correctamente.' });
 	} catch {
@@ -51,8 +53,12 @@ const getAllVideos = async (req, res) => {
 	}
 };
 
-export default {
-	createVideo,
-	getVideoById,
-	getAllVideos,
+export const getAllMyVideos = async (req, res) => {
+	try {
+		const videos = await Videos.findAll({ where: { id_user: req.client.id } });
+
+		res.status(200).json({ data: videos, message: 'Videos conseguidos correctamente.' });
+	} catch {
+		res.status(400).json({ message: 'Hubo un error al subir los datos.' });
+	}
 };

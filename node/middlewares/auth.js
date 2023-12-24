@@ -10,11 +10,11 @@ dotenv.config();
 export const jwt = async (req, res, next) => {
 	try {
 		// Read token from header
-		const token = req.header('x-auth-token');
+		const token = req.header('Authorization');
 
 		if (!token) return res.status(401).json({ message: 'Acceso denegado!.' });
 
-		const decoded = jsonwebtoken.verify(token, process.env.SECRET_KEY);
+		const decoded = jsonwebtoken.verify(token.split(' ')[1], process.env.SECRET_KEY);
 
 		try {
 			const user = await Users.findOne({
@@ -33,7 +33,7 @@ export const jwt = async (req, res, next) => {
 			// Error in database
 			return res.status(400).json({ message: 'Error en la base de datos.' });
 		}
-	} catch (error) {
+	} catch {
 		return res.status(401).json({ message: 'Token inválido.' });
 	}
 };

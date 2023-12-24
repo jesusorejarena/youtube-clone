@@ -9,8 +9,10 @@ const InputTextarea = ({
 	error,
 	touched,
 	isRequired = false,
+	isDisabled = false,
 	onChange,
-	...props
+	placeholder = ' ',
+	className,
 }) => {
 	return (
 		<Textarea
@@ -19,15 +21,29 @@ const InputTextarea = ({
 			name={name}
 			label={label}
 			isRequired={isRequired}
+			isDisabled={isDisabled}
 			variant="bordered"
 			labelPlacement="outside"
-			placeholder=" "
+			placeholder={placeholder ?? ' '}
+			className={`${className ?? ''}`}
 			validationState={error && touched ? 'invalid' : 'valid'}
-			classNames={{ inputWrapper: [props.disabled ? '' : 'border-2 border-primary '], label: 'text-[#6F6F78]' }}
-			onChange={onChange}
-			value={value.toString()}
+			classNames={{
+				label: `mb-2 ${error && touched ? '!text-[#EF4444]' : '!text-[#6F6F78] dark:!text-white'}`,
+				inputWrapper: '!border-[#E4E4E7]',
+				input: '!text-black dark:!text-white',
+				errorMessage: 'text-xs text-[#EF4444]',
+			}}
+			onChange={(e) => {
+				onChange({
+					target: {
+						name: e.target.name,
+						value: e.target.value,
+					},
+				});
+			}}
+			value={value}
+			minRows={10}
 			errorMessage={error && touched && error}
-			{...props}
 		/>
 	);
 };

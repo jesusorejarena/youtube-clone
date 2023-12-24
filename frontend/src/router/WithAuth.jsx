@@ -4,9 +4,9 @@ import { EnumPaths } from '../types/router';
 
 const Home = lazy(() => import('../pages/WithAuth/Home'));
 const AddVideo = lazy(() => import('../pages/WithAuth/AddVideo'));
-const MyVideos = lazy(() => import('../pages/WithAuth/Home'));
-const VideoDetails = lazy(() => import('../pages/WithAuth/Home'));
-const History = lazy(() => import('../pages/WithAuth/Home'));
+const MyVideos = lazy(() => import('../pages/WithAuth/MyVideos'));
+const VideoDetails = lazy(() => import('../pages/WithAuth/VideoDetails'));
+const History = lazy(() => import('../pages/WithAuth/History'));
 const Popular = lazy(() => import('../pages/WithAuth/Home'));
 
 const withAuth = [

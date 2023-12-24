@@ -1,36 +1,36 @@
 // Models
 import { Comments } from '../models/comments.model.js';
+import { Users } from '../models/users.model.js';
 
-const createComment = async (req, res) => {
+export const createComment = async (req, res) => {
 	try {
-		response = await Comments.create({
+		const response = await Comments.create({
 			...req.body,
-			id_video: req.body.id_video,
 			id_user: req.client.id,
+			created: new Date(),
 		});
 
-		res.status(200).json({ data: response, message: 'Video subido correctamente.' });
+		return res.status(200).json({ data: response, message: 'Video subido correctamente.' });
 	} catch {
-		res.status(400).json({ message: 'Hubo un error al subir los datos.' });
+		return res.status(400).json({ message: 'Hubo un error al subir los datos.' });
 	}
 };
 
-const getCommentsByVideo = async (req, res) => {
-	const { id } = req.query;
-
+export const getCommentsByVideo = async (req, res) => {
 	try {
-		videosComments = await Comments.findOne({
-			where: { id_video: id },
+		const videosComments = await Comments.findAll({
+			where: { id_video: req.params.id },
 			order: [['created', 'DESC']],
+			include: [
+				{
+					model: Users,
+					attributes: ['id', 'name', 'email'],
+				},
+			],
 		});
 
-		res.status(200).json({ data: videos, message: 'Video conseguido correctamente.' });
+		return res.status(200).json({ data: videosComments, message: 'Video conseguido correctamente.' });
 	} catch {
-		res.status(400).json({ message: 'Hubo un error al subir los datos.' });
+		return res.status(400).json({ message: 'Hubo un error al subir los datos.' });
 	}
-};
-
-export default {
-	createComment,
-	getCommentsByVideo,
 };

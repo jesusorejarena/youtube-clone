@@ -22,8 +22,10 @@ export const AuthProvider = ({ children }) => {
 
 			const token = localStorage.getItem('token');
 
-			if (token) setState({ ...state, user: { ...response, token } });
-			else logout();
+			if (token) setState({ ...state, user: { ...response.token, ...response.user, token } });
+			else {
+				logout();
+			}
 		} catch (error) {
 			logout();
 		}

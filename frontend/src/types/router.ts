@@ -1,5 +1,5 @@
 enum WithUser {
-	Home = '',
+	Home = '/',
 	AddVideo = '/add-video',
 	MyVideos = '/my-videos',
 	VideoDetails = '/video/:id',

@@ -1,6 +1,9 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db-config.js';
 
+import { Users } from './users.model.js';
+import { Videos } from './videos.model.js';
+
 export const Comments = sequelize.define(
 	'comments',
 	{
@@ -19,3 +22,11 @@ export const Comments = sequelize.define(
 		timestamps: false,
 	}
 );
+
+Users.hasMany(Comments, { foreignKey: 'id_user' });
+Comments.belongsTo(Users, { foreignKey: 'id_user' });
+
+Videos.hasMany(Comments, { foreignKey: 'id_video' });
+Comments.belongsTo(Videos, { foreignKey: 'id_video' });
+
+export default Comments;

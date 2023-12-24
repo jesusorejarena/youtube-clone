@@ -8,11 +8,9 @@ import { jwt } from '../middlewares/auth.js';
 const router = Router();
 
 // Controllers
-import { login, signIn, verifyUser } from '../controllers/auth.controllers.js';
+import { createComment, getCommentsByVideo } from '../controllers/comments.controllers.js';
 
-router.post('/login', login);
-router.post('/signin', signIn);
-
-router.get('/whois', jwt, verifyUser);
+router.post('/', jwt, createComment);
+router.get('/get-by-video/:id', getCommentsByVideo);
 
 export default router;

@@ -1,6 +1,9 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db-config.js';
 
+import { Users } from './users.model.js';
+import { Videos } from './videos.model.js';
+
 export const Likes = sequelize.define(
 	'likes',
 	{
@@ -19,3 +22,11 @@ export const Likes = sequelize.define(
 		timestamps: false,
 	}
 );
+
+Users.hasMany(Likes, { foreignKey: 'id_user' });
+Likes.belongsTo(Users, { foreignKey: 'id_user' });
+
+Videos.hasMany(Likes, { foreignKey: 'id_video' });
+Likes.belongsTo(Videos, { foreignKey: 'id_video' });
+
+export default Likes;

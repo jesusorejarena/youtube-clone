@@ -12,6 +12,12 @@ export const getAllVideosAPI = async () => {
 	return response.data;
 };
 
+export const getAllMyVideosAPI = async () => {
+	const response = await axios.get('video/get-all-my-videos');
+
+	return response.data;
+};
+
 export const getVideoByIdAPI = async (id) => {
 	const response = await axios.get(`video/get-by-id/${id}`);
 

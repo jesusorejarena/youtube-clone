@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
 import { useContext } from 'react';
 import { useFormik } from 'formik';
@@ -8,7 +9,7 @@ import AuthContext from '../../../context/AuthContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
-const SignIn = () => {
+const SignIn = ({ onClose }) => {
 	const navigate = useNavigate();
 
 	const { login } = useContext(AuthContext);
@@ -28,6 +29,12 @@ const SignIn = () => {
 						token: response.token,
 					});
 				}
+
+				if (onClose) {
+					onClose();
+				} else {
+					navigate('/');
+				}
 			} catch (error) {
 				toast.error(error.response.data.message ?? 'Error sign in');
 			}
@@ -37,7 +44,7 @@ const SignIn = () => {
 	return (
 		<main className="flex flex-col gap-y-10 items-center justify-center">
 			<div className="w-full max-w-[460px] max-h-[600px]">
-				<Card className="p-6">
+				<Card className={onClose ? 'shadow-none bg-transparent' : 'p-6'}>
 					<CardHeader className="pb-4 pt-2 px-4 flex-col items-center">
 						<h3 className="font-bold text-2xl">Sign in</h3>
 					</CardHeader>
