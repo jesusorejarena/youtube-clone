@@ -3,18 +3,25 @@ version: '3'
 services:
   postgres:
     image: postgres
-    # container_name: postgres
     restart: always
     tty: true
+    container_name: postgres
+    hostname: host.docker.internal
     volumes:
       - ./data:/var/lib/postgresql/data
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      - DATABASE_HOST=127.0.0.1
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=youtube-db
+      DATABASE_HOST: 127.0.0.1
+      POSTGRES_DB: youtube-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - '5432:5432'
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      interval: 1s
+      timeout: 5s
+      retries: 10
     # networks:
     #   - node-network
 
@@ -30,20 +37,21 @@ services:
 
   backend:
     build:
-      context: node
+      context: backend
     container_name: backend
-    working_dir: /usr/src/bin/server
+    working_dir: /usr/src/app/backend
     networks:
       - node-network
     volumes:
-      - ./node:/usr/src/bin/server
-      - /usr/src/app/node_modules
+      - ./backend:/usr/src/app/backend
+      - /usr/src/app/backend/node_modules
     tty: true
     ports:
       - '3000:3000'
     command: npm run start
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   frontend:
     build:

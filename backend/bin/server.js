@@ -2,8 +2,6 @@ import server from '../app.js';
 import config from '../config/config-env.js';
 import { sequelize } from '../config/db-config.js';
 
-await sequelize.sync({ force: false });
-
 const createTable = async () => {
 	await sequelize.query(`
 	CREATE TABLE IF NOT EXISTS users (
@@ -44,7 +42,7 @@ const createTable = async () => {
 		FOREIGN KEY (id_video) REFERENCES videos (id)
 	);
 
-	CREATE TABLE IF NOT EXISTS history (
+	CREATE TABLE IF NOT EXISTS histories (
 		id SERIAL PRIMARY KEY,
 		id_user INTEGER NOT NULL,
 		id_video INTEGER NOT NULL,
@@ -55,7 +53,19 @@ const createTable = async () => {
 `);
 };
 
-createTable();
+const initializeDatabase = async () => {
+	try {
+		await sequelize.sync({ force: false });
+
+		console.log('Base de datos inicializada correctamente.');
+	} catch {
+		console.error('Error al inicializar la base de datos');
+	} finally {
+		createTable();
+	}
+};
+
+initializeDatabase();
 
 server.listen(config.port, () => {
 	config.port

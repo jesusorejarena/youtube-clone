@@ -28,7 +28,13 @@ Asegúrate de tener Docker y Docker Compose instalados en tu máquina.
    node/database/db.sql
    ```
 
-4. Ejecuta el siguiente comando para construir y levantar los contenedores Docker:
+4. Instala las dependencias de nodejs:
+
+   ```bash
+   cd node && npm i & cd ../
+   ```
+
+5. Ejecuta el siguiente comando para construir y levantar los contenedores Docker:
 
    ```bash
    docker-compose up --build
