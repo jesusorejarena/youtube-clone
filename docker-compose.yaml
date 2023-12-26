@@ -9,7 +9,6 @@ services:
     hostname: host.docker.internal
     volumes:
       - ./data:/var/lib/postgresql/data
-      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       DATABASE_HOST: 127.0.0.1
       POSTGRES_DB: youtube-db
