@@ -22,19 +22,7 @@ Asegúrate de tener Docker y Docker Compose instalados en tu máquina.
    cd youtube-clone
    ```
 
-3. Crea la base de datos en PostgreSQL:
-
-   ```bash
-   node/database/db.sql
-   ```
-
-4. Instala las dependencias de nodejs:
-
-   ```bash
-   cd node && npm i & cd ../
-   ```
-
-5. Ejecuta el siguiente comando para construir y levantar los contenedores Docker:
+3. Ejecuta el siguiente comando para construir y levantar los contenedores Docker:
 
    ```bash
    docker-compose up --build
