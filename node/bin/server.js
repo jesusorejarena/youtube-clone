@@ -6,22 +6,6 @@ await sequelize.sync({ force: false });
 
 const createTable = async () => {
 	await sequelize.query(`
-	CREATE TABLE IF NOT EXISTS comments (
-		id SERIAL PRIMARY KEY,
-		id_user INTEGER NOT NULL,
-		id_video INTEGER NOT NULL,
-		comment VARCHAR(255) NOT NULL,
-		created TIMESTAMP
-	);
-
-	CREATE TABLE IF NOT EXISTS likes (
-		id SERIAL PRIMARY KEY,
-		id_user INTEGER NOT NULL,
-		id_video INTEGER NOT NULL,
-		type VARCHAR(255) NOT NULL,
-		created TIMESTAMP
-	);
-
 	CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(255),
@@ -35,7 +19,38 @@ const createTable = async () => {
 		id_user INTEGER NOT NULL,
 		title VARCHAR(255) NOT NULL,
 		video VARCHAR(255) NOT NULL,
-		created TIMESTAMP
+		popularity INTEGER NOT NULL,
+		created TIMESTAMP,
+		FOREIGN KEY (id_user) REFERENCES users (id)
+	);
+
+	CREATE TABLE IF NOT EXISTS comments (
+		id SERIAL PRIMARY KEY,
+		id_user INTEGER NOT NULL,
+		id_video INTEGER NOT NULL,
+		comment VARCHAR(255) NOT NULL,
+		created TIMESTAMP,
+		FOREIGN KEY (id_user) REFERENCES users (id),
+		FOREIGN KEY (id_video) REFERENCES videos (id)
+	);
+
+	CREATE TABLE IF NOT EXISTS likes (
+		id SERIAL PRIMARY KEY,
+		id_user INTEGER NOT NULL,
+		id_video INTEGER NOT NULL,
+		type VARCHAR(255) NOT NULL,
+		created TIMESTAMP,
+		FOREIGN KEY (id_user) REFERENCES users (id),
+		FOREIGN KEY (id_video) REFERENCES videos (id)
+	);
+
+	CREATE TABLE IF NOT EXISTS history (
+		id SERIAL PRIMARY KEY,
+		id_user INTEGER NOT NULL,
+		id_video INTEGER NOT NULL,
+		created TIMESTAMP,
+		FOREIGN KEY (id_user) REFERENCES users (id),
+		FOREIGN KEY (id_video) REFERENCES videos (id)
 	);
 `);
 };

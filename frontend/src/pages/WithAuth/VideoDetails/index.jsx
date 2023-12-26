@@ -60,8 +60,6 @@ const VideoDetails = () => {
 
 					formik.resetForm();
 
-					console.log(response);
-
 					toast.success(response?.data?.message ?? 'Comentario creado correctamente.');
 
 					getComments();
