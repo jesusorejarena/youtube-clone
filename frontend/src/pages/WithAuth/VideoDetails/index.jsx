@@ -60,7 +60,9 @@ const VideoDetails = () => {
 
 					formik.resetForm();
 
-					toast.success(response.data?.message ?? 'Comentario creado correctamente.');
+					console.log(response);
+
+					toast.success(response?.data?.message ?? 'Comentario creado correctamente.');
 
 					getComments();
 				} catch (error) {
@@ -150,7 +152,7 @@ const VideoDetails = () => {
 
 				toast.success(response?.message ?? 'Reacción hecha correctamente');
 
-				setTypeLike(response.type);
+				setTypeLike(response?.type);
 
 				getCountLikeOrDislike();
 			} catch (error) {
@@ -162,7 +164,7 @@ const VideoDetails = () => {
 			try {
 				const response = await getLikeByVideoAPI(video?.id);
 
-				setTypeLike(response.data.type);
+				setTypeLike(response?.data?.type);
 			} catch (error) {
 				toast.error(error.response?.message ?? 'Hubo un error al cargar la reaccion');
 			}

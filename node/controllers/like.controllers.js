@@ -1,5 +1,6 @@
 // Models
 import { Likes } from '../models/likes.model.js';
+import { Videos } from '../models/videos.model.js';
 
 export const createOrUpdateLike = async (req, res) => {
 	const { id } = req.params;
@@ -9,6 +10,21 @@ export const createOrUpdateLike = async (req, res) => {
 		let like = await Likes.findOne({
 			where: { id_video: id, id_user: req.client.id },
 		});
+
+		const video = await Videos.findOne({
+			where: { id: id },
+		});
+
+		let points = 0;
+		let popularityActual = video?.dataValues?.popularity ?? 0;
+
+		if (like) {
+			if (like.dataValues.type === 'like') popularityActual = popularityActual - 10;
+			if (like.dataValues.type === 'dislike') popularityActual = popularityActual + 5;
+		}
+
+		if (type === 'like') points = popularityActual + 10;
+		if (type === 'dislike') points = popularityActual - 5;
 
 		if (type !== 'deleted') {
 			if (like) {
@@ -31,6 +47,10 @@ export const createOrUpdateLike = async (req, res) => {
 
 			type = '';
 		}
+
+		await video.update({
+			popularity: points,
+		});
 
 		return res.status(200).json({ type: type, message: 'Hecho correctamente.' });
 	} catch {

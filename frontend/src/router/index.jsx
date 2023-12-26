@@ -6,7 +6,7 @@ import withAuth from './WithAuth';
 import Loader from '../components/Loader';
 import Layout from '../components/Layout';
 import AuthContext from '../context/AuthContext';
-import tokenAuth from '../config/token';
+import { tokenAuth } from '../config/token';
 import Page404 from '../pages/404';
 
 const RouterIndex = () => {

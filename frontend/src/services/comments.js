@@ -1,4 +1,7 @@
 import axios from '../config/axios';
+import { tokenAuth } from '../config/token';
+
+tokenAuth();
 
 export const createCommentsAPI = async (values) => {
 	const response = await axios.post('comments', values);

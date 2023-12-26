@@ -1,4 +1,7 @@
 import axios from '../config/axios';
+import { tokenAuth } from '../config/token';
+
+tokenAuth();
 
 export const createOrUpdateLikeAPI = async ({ type, id }) => {
 	const response = await axios.post(`likes/${id}`, { type });

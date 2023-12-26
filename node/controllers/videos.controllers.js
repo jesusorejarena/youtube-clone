@@ -1,12 +1,14 @@
 // Models
 import { Videos } from '../models/videos.model.js';
-import { Comments } from '../models/comments.model.js';
-import { Likes } from '../models/likes.model.js';
+
+import { format } from 'date-fns';
+import { sequelize } from '../config/db-config.js';
 
 export const createVideo = async (req, res) => {
 	try {
 		const response = await Videos.create({
 			...req.body,
+			popularity: 0,
 			id_user: req.client.id,
 			created: new Date(),
 		});
@@ -25,18 +27,6 @@ export const getVideoById = async (req, res) => {
 			where: { id: id },
 		});
 
-		const videosComments = await Comments.findOne({
-			where: { id_video: id },
-		});
-
-		const videosLike = await Likes.count({
-			where: { id_video: id, type: 'like' },
-		});
-
-		const videosDislike = await Likes.count({
-			where: { id_video: id, type: 'dislike' },
-		});
-
 		res.status(200).json({ data: videos, message: 'Video conseguido correctamente.' });
 	} catch {
 		res.status(400).json({ message: 'Hubo un error al subir los datos.' });
@@ -45,7 +35,7 @@ export const getVideoById = async (req, res) => {
 
 export const getAllVideos = async (req, res) => {
 	try {
-		const videos = await Videos.findAll({ order: [['created', 'DESC']] });
+		const videos = await Videos.findAll({ order: sequelize.literal('RANDOM()') });
 
 		res.status(200).json({ data: videos, message: 'Videos conseguidos correctamente.' });
 	} catch {
@@ -60,5 +50,44 @@ export const getAllMyVideos = async (req, res) => {
 		res.status(200).json({ data: videos, message: 'Videos conseguidos correctamente.' });
 	} catch {
 		res.status(400).json({ message: 'Hubo un error al subir los datos.' });
+	}
+};
+
+export const getAllVideosPopular = async (req, res) => {
+	try {
+		let videos = await Videos.findAll({
+			order: [
+				['popularity', 'DESC'],
+				['created', 'DESC'],
+			],
+			limit: 5,
+		});
+
+		videos = videos.map((video) => {
+			video = video.dataValues;
+
+			const created = format(new Date(video?.created), 'MM/dd/yyyy') === format(new Date(), 'MM/dd/yyyy');
+
+			return {
+				...video,
+				popularity: created ? video.popularity + 100 : video.popularity,
+			};
+		});
+
+		videos.sort((a, b) => {
+			// Ordenar por popularidad de mayor a menor
+			const popularityComparison = b.popularity - a.popularity;
+
+			// Si hay un empate en popularidad, ordenar aleatoriamente cada vez
+			if (popularityComparison === 0) {
+				return Math.random() - 0.5; // Resta o suma un valor aleatorio entre -0.5 y 0.5
+			}
+
+			return popularityComparison;
+		});
+
+		res.status(200).json({ data: videos, message: 'Videos conseguidos correctamente.' });
+	} catch {
+		res.status(400).json({ message: 'Hubo un error al traer los datos.' });
 	}
 };

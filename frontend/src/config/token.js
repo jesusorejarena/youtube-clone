@@ -1,6 +1,6 @@
 import axios from './axios';
 
-const tokenAuth = (token) => {
+export const tokenAuth = (token) => {
 	const tokenStorage = token ? token : localStorage.getItem('token');
 
 	if (tokenStorage) {
@@ -9,5 +9,3 @@ const tokenAuth = (token) => {
 		delete axios.defaults.headers['Authorization'];
 	}
 };
-
-export default tokenAuth;

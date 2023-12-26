@@ -15,6 +15,7 @@ export const Videos = sequelize.define(
 		id_user: { type: DataTypes.INTEGER, allowNull: false },
 		title: { type: DataTypes.STRING, allowNull: false },
 		video: { type: DataTypes.STRING, allowNull: false },
+		popularity: { type: DataTypes.INTEGER, allowNull: false },
 		created: { type: DataTypes.DATE, allowNull: true },
 	},
 	{

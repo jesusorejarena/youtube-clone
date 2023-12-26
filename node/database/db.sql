@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS videos (
   id_user INTEGER NOT NULL,
   title VARCHAR(255) NOT NULL,
   video VARCHAR(255) NOT NULL,
+  popularity INTEGER NOT NULL,
   created TIMESTAMP,
   FOREIGN KEY (id_user) REFERENCES users (id)
 );

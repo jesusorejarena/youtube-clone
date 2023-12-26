@@ -1,27 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Card, CardBody } from '@nextui-org/react';
 import { toast } from 'sonner';
-import { getAllMyVideosAPI } from '../../../services/videos';
-import { tokenAuth } from '../../../config/token';
+import { getAllPopularVideosAPI } from '../../../services/videos';
 import CardVideo from '../../../components/CardVideo';
 
-const MyVideos = () => {
+const Popular = () => {
 	const [videos, setVideos] = useState([]);
 
-	const getVideos = async () => {
+	const getPopularVideos = async () => {
 		try {
-			tokenAuth();
+			const response = await getAllPopularVideosAPI();
 
-			const response = await getAllMyVideosAPI();
-
-			setVideos(response.data);
+			setVideos(response?.data);
 		} catch (error) {
-			toast.error(error.response.data.message ?? 'Error loading videos');
+			toast.error(error?.response?.message ?? 'Error loading videos');
 		}
 	};
 
 	useEffect(() => {
-		getVideos();
+		getPopularVideos();
 	}, []);
 
 	return (
@@ -30,15 +27,15 @@ const MyVideos = () => {
 				<CardBody className="space-y-10 lg:p-14">
 					<header className="flex flex-col justify-between items-start p-5 lg:p-0 lg:pb-5">
 						<div className="flex flex-row justify-between w-full items-center mb-5">
-							<h2 className="text-primary font-medium text-3xl">Mis videos</h2>
+							<h2 className="text-primary font-medium text-3xl">Videos mas populares</h2>
 						</div>
 					</header>
 
 					<main className="flex flex-wrap justify-center lg:justify-start gap-5">
 						{videos.length > 0 ? (
-							videos.map((video, index) => <CardVideo key={index} item={video} size="h-[275px] w-[350px]" />)
+							videos.map((video, index) => <CardVideo key={index} item={video} size="h-[275px] w-[350px]" popularity />)
 						) : (
-							<p className="p-3 mb-10 text-2xl font-bold">No has subido videos aun</p>
+							<p className="p-3 mb-10 text-2xl font-bold">No se encontraron resultados</p>
 						)}
 					</main>
 				</CardBody>
@@ -47,4 +44,4 @@ const MyVideos = () => {
 	);
 };
 
-export default MyVideos;
+export default Popular;

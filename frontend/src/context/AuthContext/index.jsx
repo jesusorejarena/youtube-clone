@@ -2,7 +2,7 @@
 import { createContext, useState } from 'react';
 import { defaultAuthContextData } from './default';
 import { whoisAPI } from '../../services/auth';
-import tokenAuth from '../../config/token';
+import { tokenAuth } from '../../config/token';
 
 const AuthContext = createContext(defaultAuthContextData);
 

@@ -7,7 +7,7 @@ const AddVideo = lazy(() => import('../pages/WithAuth/AddVideo'));
 const MyVideos = lazy(() => import('../pages/WithAuth/MyVideos'));
 const VideoDetails = lazy(() => import('../pages/WithAuth/VideoDetails'));
 const History = lazy(() => import('../pages/WithAuth/History'));
-const Popular = lazy(() => import('../pages/WithAuth/Home'));
+const Popular = lazy(() => import('../pages/WithAuth/Popular'));
 
 const withAuth = [
 	{
